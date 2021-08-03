@@ -1,0 +1,152 @@
+.App {
+  text-align: -webkit-center;
+  padding: 2%;
+}
+
+.logo {
+  height: 40px;
+  pointer-events: none;
+}
+
+.chosennum{
+  background-color: #5faef7;;
+  border-radius: 50%;
+  color: black;
+  padding: 10px;
+  font-weight: bolder;
+  height: 3rem;
+  width: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chatSection{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 82vh;
+  overflow-y: auto;
+  background: #ebebeb;
+  width: 30%;
+}
+
+.rightpanel>.profile{
+  flex-direction: row-reverse !important;
+}
+
+.rightpanel>.calcSection{
+  align-items: flex-end !important;
+  padding-right: 15%;
+}
+
+.profile{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 2%;
+}
+
+.logo,.chosennum  {
+  padding: 5px;
+}
+
+.chatsWrapper{
+  height: 425px;
+  overflow: auto;
+}
+
+.calcSection{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.attempt{
+  display: flex;
+  flex-direction: column;
+}
+
+.formula,.result{
+  padding: 5px;
+  border-radius: 5px;
+  margin-top: 10px;
+  width: 150px;
+  background-color: white;
+  box-shadow: 0 0 6px 2px #00000029;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.actionbtns{
+  width:100%;
+  position: absolute;
+  bottom: 10px;
+  display: flex;
+  justify-content: space-around;
+
+}
+
+.actionbtns>button{
+  height: 4rem;
+  color: black;
+  font-weight: bolder;
+  border-radius: 50%;
+  width: 4rem;
+  cursor: pointer;
+  border: 0;
+  background-color: #5faef7;
+}
+
+.actionbtns>button:disabled{
+  background-color: lightgray
+}
+
+.statusbar{
+  position: fixed !important;
+}
+
+.gameoverlogo{
+  height: 80px;
+  width: 80px;
+}
+
+
+.logoWrapper{
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
