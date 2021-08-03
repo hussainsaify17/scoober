@@ -9,7 +9,7 @@ import tryagain from './assets/tryagain.jpg'
 import won from './assets/won.png'
 
 const socket = io(websocketURL)
-
+window.socket = socket
 function App() {
   const { updateSBar } = useContext(SBarContext)
   const [turn, setTurn] = useState(false)
@@ -22,9 +22,17 @@ function App() {
   const [isOtherPlayerReady, setIsOtherPlayerReady] = useState(false)
   const [currentUser] = useState(`${playerNames[Math.floor(Math.random() * playerNames.length)]} ${Number((Math.random() * 100).toFixed(2))}`)
 
+  // const [gameState, setGameState] = useState({
+  //   error:false,
+  //   connected
+  // })
+
   useEffect(() => {
     socket.on("connect", function () {
       updateSBar('Ok', 'Connected')
+    })
+    socket.on('connect_error', function () {
+      updateSBar('Error', `Failed to establish connection with server.`)
     })
     socket.on('game', (gameData) => {
       console.log(gameData)
@@ -96,54 +104,57 @@ function App() {
 
   return (
     <div className="App">
-      {!isOtherPlayerReady && <h3>{getGameStatus()}</h3>}
-      {!isGameStarted && (<>
-        <button onClick={() => joinGame(false)}>VS Player</button>
-        <button onClick={() => joinGame(true)}>VS Computer</button>
-      </>)}
+      {
+        socket.connected ? (<>{!isOtherPlayerReady && <h3>{getGameStatus()}</h3>}
+          {!isGameStarted && (<>
+            <button onClick={() => joinGame(false)}>VS Player</button>
+            <button onClick={() => joinGame(true)}>VS Computer</button>
+          </>)}
 
-      {isGameStarted && isOtherPlayerReady && (<>
-        <h4>Starting number {gameInfo?.startingNumber}</h4>
-        <div className='chatSection'>
-          <div className='chatsWrapper'>
-            {attemps.map(attempt => {
-              return (
-                <div key={attempt.newValue} className={`attempt ${attempt.user.id === currentUser ? 'rightpanel' : 'leftpanel'}`}>
-                  <div className='profile'>
-                    <img title={currentUser} className='logo' src={logo} alt={currentUser} />
-                    <span className='chosennum'>{attempt.number}</span>
-                  </div>
-                  <div className='calcSection'>
-                    <div className='formula'>{attempt.text}</div>
-                    <div className='result'>{attempt.newValue}</div>
-                  </div>
+          {isGameStarted && isOtherPlayerReady && (<>
+            <h4>Starting number {gameInfo?.startingNumber}</h4>
+            <div className='chatSection'>
+              <div className='chatsWrapper'>
+                {attemps.map(attempt => {
+                  return (
+                    <div key={attempt.newValue} className={`attempt ${attempt.user.id === currentUser ? 'rightpanel' : 'leftpanel'}`}>
+                      <div className='profile'>
+                        <img title={currentUser} className='logo' src={logo} alt={currentUser} />
+                        <span className='chosennum'>{attempt.number}</span>
+                      </div>
+                      <div className='calcSection'>
+                        <div className='formula'>{attempt.text}</div>
+                        <div className='result'>{attempt.newValue}</div>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+              {isGameStarted && isOtherPlayerReady && (
+                <div className='actionbtns'>
+                  <button disabled={!turn} onClick={() => makeMove(-1)}>-1</button>
+                  <button disabled={!turn} onClick={() => makeMove(0)}>0</button>
+                  <button disabled={!turn} onClick={() => makeMove(1)}>+1</button>
                 </div>
-              )
-            })}
-          </div>
-          {isGameStarted && isOtherPlayerReady && (
-            <div className='actionbtns'>
-              <button disabled={!turn} onClick={() => makeMove(-1)}>-1</button>
-              <button disabled={!turn} onClick={() => makeMove(0)}>0</button>
-              <button disabled={!turn} onClick={() => makeMove(1)}>+1</button>
+              )}
             </div>
-          )}
-        </div>
-      </>)}
-      
-      <Modal
-        isOpen={gameOver}
-        onRequestClose={() => window.location.reload()}
-        style={customStyles}>
-        <div className='logoWrapper'>
-        <h3>
-          {isWinner ? "You've Won the game..!!" : "You Lost the game..!!"}
-        </h3>
-          {isWinner ? <img className='gameoverlogo' src={won} alt='' /> :
-            <img className='gameoverlogo' src={tryagain} alt='' />}<br/><br/>
-        <button onClick={() => window.location.reload()}>Restart Game..!!</button>
-        </div>
-      </Modal>
+          </>)}
+
+          <Modal
+            isOpen={gameOver}
+            onRequestClose={() => window.location.reload()}
+            style={customStyles}>
+            <div className='logoWrapper'>
+              <h3>
+                {isWinner ? "You've Won the game..!!" : "You Lost the game..!!"}
+              </h3>
+              {isWinner ? <img className='gameoverlogo' src={won} alt='' /> :
+                <img className='gameoverlogo' src={tryagain} alt='' />}<br /><br />
+              <button onClick={() => window.location.reload()}>Restart Game..!!</button>
+            </div>
+          </Modal></>) : (<h1>Your server does not seems to be running. Please check your server status</h1>)
+      }
+
     </div>
   );
 }
